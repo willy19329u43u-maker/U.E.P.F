@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel | U.E. Paulo Freire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <style>
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 16px 0; }
+        .stat-card { padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.04); text-align: center; }
+        .stat-card h3 { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+        .stat-card .count { font-size: 2rem; font-weight: 800; display: block; }
+        .btn-accent { background: linear-gradient(120deg, var(--turquoise), var(--primary)); border: none; color: #0b1220; font-weight: 700; padding: 10px 16px; border-radius: 10px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-accent:hover { filter: brightness(1.08); }
+        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); }
+        table.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        table.table th { background: rgba(255,255,255,.04); text-align: left; padding: 10px 12px; color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+        table.table td { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+        table.table tr:last-child td { border-bottom: none; }
+        .empty { text-align: center; color: var(--muted); padding: 30px; border-radius: 14px; border: 1px dashed var(--line); }
+    </style>
+</head>
+<body class="theme-dark palette-metal">
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <img src="assets/img/escudo.png" alt="Logo U.E. Paulo Freire" class="brand-logo">
+                <span class="brand-text metal-text label">U.E. Paulo Freire</span>
+            </div>
+            <nav class="menu">
+                <a class="menu-link active" href="#" title="Panel"><span class="ico">🏠</span><span class="label">Panel</span></a>
+                <a class="menu-link" href="#" title="Estudiantes"><span class="ico">🎓</span><span class="label">Estudiantes</span></a>
+                <a class="menu-link" href="#" title="Asistencia"><span class="ico">✅</span><span class="label">Asistencia</span></a>
+                <a class="menu-link" href="#" title="Calificaciones"><span class="ico">📚</span><span class="label">Calificaciones</span></a>
+                <a class="menu-link" href="#" title="Horario"><span class="ico">🕒</span><span class="label">Horario</span></a>
+                <a class="menu-link" href="#" title="Comunicados"><span class="ico">📢</span><span class="label">Comunicados</span></a>
+                <a class="menu-link" href="#" title="Perfil"><span class="ico">👤</span><span class="label">Perfil</span></a>
+                <a class="menu-link" href="#" title="Cerrar sesión" id="logoutBtn"><span class="ico">🚪</span><span class="label">Salir</span></a>
+            </nav>
+        </aside>
+
+        <div class="main">
+            <header class="topbar">
+                <div class="topbar-controls">
+                    <button id="menuToggle" class="btn icon-btn" aria-label="Menu">☰</button>
+                    <button id="sideToggle" class="btn icon-btn" aria-label="Expandir">⇄</button>
+                </div>
+                <h1 class="metal-text" style="margin-right: 15px;">Panel de Control</h1>
+                <div class="topbar-user" style="display: flex; gap: 8px; align-items: center;">
+                    <button id="themeToggle" class="btn icon-btn" title="Cambiar Tema">☀️</button>
+                    <img id="userAvatar" src="assets/img/avatars/avatar-estudiante.svg" alt="Avatar" class="topbar-avatar" style="width:32px;height:32px;border-radius:50%;">
+                    <span class="badge badge-accent" id="userRole" style="font-size:0.75rem;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.12);color:var(--text);">estudiante</span>
+                    <div style="display:flex;flex-direction:column;justify-content:center;">
+                        <div id="userName" style="font-weight:600;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Usuario</div>
+                        <div id="userEmail" style="font-size:0.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">correo@ejemplo.edu.bo</div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content">
+                <div id="dashboardContent">
+                    <!-- Contenido renderizado por JS -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/mock-data.js"></script>
+    <script src="assets/js/pages.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>U.E. Paulo Freire — Plataforma Web v5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <style>
+        .hero { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 40px 20px; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0 0 16px; line-height: 1.1; }
+        .hero p { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--muted); max-width: 620px; margin: 0 auto 24px; line-height: 1.6; }
+        .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .features { padding: 60px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; margin: 30px auto; max-width: 900px; }
+        .features h2 { text-align: center; margin-bottom: 24px; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        .feature-card { padding: 20px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.04); }
+        .feature-card h3 { margin: 0 0 8px; font-size: 1.1rem; }
+        .feature-card p { margin: 0; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+        .note { text-align: center; margin-top: 30px; color: var(--muted); font-size: 0.95rem; }
+        .note code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body class="theme-dark palette-metal">
+    <div class="hero">
+        <div>
+            <img src="assets/img/escudo.png" alt="Escudo U.E. Paulo Freire" style="width: 120px; height: 120px; margin-bottom: 16px; opacity: 0.9;">
+            <h1 class="metal-text">U.E. "Paulo Freire"</h1>
+            <p>Plataforma web de gestión escolar — Asistencia, calificaciones, horarios y comunicados con acceso por roles.</p>
+            <div class="hero-actions">
+                <a href="login.html" class="btn btn-accent">🔐 Iniciar Sesión (Demo)</a>
+                <a href="https://github.com/TU_USUARIO/ue_paulo_freire_web" class="btn" target="_blank" rel="noopener">📂 Ver Código en GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="features">
+        <h2>📋 Características</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>🎭 5 Roles de Usuario</h3>
+                <p>Admin, secretaría, docente, estudiante y padre con permisos y paletas visuales distintas.</p>
+            </div>
+            <div class="feature-card">
+                <h3>✅ Asistencia Digital</h3>
+                <p>Registro de presencia, faltas, retrasos y licencias con notificaciones automáticas.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📚 Calificaciones</h3>
+                <p>Notas por materia y trimestre con cálculo de promedio y libreta académica imprimible.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🕒 Horarios</h3>
+                <p>Vistas adaptativas de horario según el rol del usuario.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📢 Comunicados</h3>
+                <p>Avisos segmentados global, por curso, docente o área.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔐 Seguridad</h3>
+                <p>Hash PBKDF2-SHA256, CSRF, rate-limiting y auditoría de accesos.</p>
+            </div>
+        </div>
+    </section>
+
+    <p class="note">⚠️ Esta es una <strong>versión demo estática</strong> para GitHub Pages. El sistema completo con PHP y MySQL requiere un servidor como XAMPP. Consulta <code>README_INSTALACION.md</code> para la instalación local.</p>
+</body>
+</html>

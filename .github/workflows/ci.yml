@@ -1,0 +1,33 @@
+name: CI - U.E. Paulo Freire Web
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Validate PHP syntax
+        run: |
+          find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
+          echo "✅ Todos los archivos PHP tienen sintaxis válida"
+
+      - name: Verify database.sql exists
+        run: |
+          test -f database.sql && echo "✅ database.sql presente" || exit 1
+
+      - name: Verify .env.example exists
+        run: |
+          test -f .env.example && echo "✅ .env.example presente" || exit 1

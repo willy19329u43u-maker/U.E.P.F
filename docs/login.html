@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iniciar Sesión | U.E. Paulo Freire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <style>
+        .login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 30px 16px; position: relative; overflow: hidden; }
+        .login-bg { position: fixed; inset: 0; z-index: -1; background: url('assets/img/escudo.png') center/cover no-repeat; filter: blur(14px) brightness(0.45); transform: scale(1.15); }
+        .shell { display: grid; grid-template-columns: 1.05fr 1fr; width: min(1020px, 96vw); max-width: 900px; background: var(--surface); border-radius: 22px; overflow: hidden; position: relative; box-shadow: var(--shadow); backdrop-filter: blur(14px); border: 1px solid var(--line); }
+        .shell-left { position: relative; padding: 34px 30px; color: #eaf6fb; display: flex; flex-direction: column; gap: 14px; overflow: hidden; background: linear-gradient(160deg, var(--bg2), var(--primary-2) 60%, var(--primary)); background-size: 200% 200%; animation: bgShift 12s ease-in-out infinite alternate; }
+        .shell-left h1 { font-size: 1.6rem; margin: 0; line-height: 1.2; }
+        .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+        .brand-logo-login { width: 100px; height: 100px; object-fit: contain; }
+        .brand-badge { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-weight: 800; font-size: 1.2rem; color: #0b1220; background: linear-gradient(145deg, #e8eef4 0%, var(--primary) 45%, var(--primary-2) 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 18px rgba(0,0,0,.4); }
+        .illus { color: #bfe9f5; margin-top: 10px; font-size: 0.95rem; line-height: 1.5; max-width: 280px; }
+        .shell-right { padding: 34px 30px; display: flex; flex-direction: column; gap: 16px; }
+        .shell-sub { color: var(--muted); margin: 0; font-size: 0.95rem; }
+        .login-card { width: 100%; max-width: 380px; margin: 0 auto; }
+        .login-card h2 { margin: 0 0 10px; font-size: 1.5rem; }
+        .login-card p { color: var(--muted); margin: 0 0 22px; font-size: 0.95rem; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+        .input-wrapper { position: relative; }
+        .input { width: 100%; padding: 12px 14px 12px 42px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text); font-family: inherit; font-size: 0.95rem; }
+        .input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(25,195,230,.2); }
+        .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; opacity: 0.7; }
+        .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 4px; }
+        .pw-toggle:hover { color: var(--text); }
+        .login-error { display: none; margin-bottom: 14px; padding: 10px 14px; background: rgba(255, 80, 80, .12); border: 1px solid rgba(255, 80, 80, .35); color: #ff6b6b; border-radius: 8px; font-size: 0.85rem; text-align: center; }
+        .btn-login { width: 100%; padding: 14px; border: none; border-radius: 10px; background: linear-gradient(120deg, var(--primary), var(--primary-2)); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        .btn-login:active { transform: scale(0.98); }
+        .btn-login.loading { position: relative; color: transparent; }
+        .btn-login.loading::after { content: ''; position: absolute; inset: 0; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 10px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .creds { margin-top: 22px; padding: 14px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px dashed var(--line); font-size: 0.82rem; color: var(--muted); }
+        .creds h4 { margin: 0 0 8px; font-size: 0.9rem; color: var(--text); }
+        .creds table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .creds td { padding: 4px 6px; border-bottom: 1px dashed rgba(255,255,255,.1); }
+        .back-home { margin-top: 18px; text-align: center; }
+        .back-home a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+        .back-home a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="theme-dark palette-metal">
+    <div class="login-bg"></div>
+    <div class="login-wrap">
+        <div class="shell">
+            <div class="shell-left">
+                <div class="brand-row">
+                    <img src="assets/img/escudo.png" alt="Logo" class="brand-logo-login">
+                    <div class="brand-badge">PF</div>
+                </div>
+                <h1>U.E. Paulo Freire</h1>
+                <p class="illus">Sistema de gestión escolar — Acceso seguro para administradores, docentes, estudiantes y padres de familia.</p>
+            </div>
+            <div class="shell-right">
+                <p class="shell-sub">Inicia sesión con tus credenciales institucionales (RUDE/CI).</p>
+
+                <div class="login-card">
+                    <h2>🔐 Iniciar sesión</h2>
+                    <p>Accede al panel correspondiente según tu rol.</p>
+
+                    <div class="login-error" id="loginError">Usuario o contraseña incorrectos.</div>
+
+                    <form id="loginForm" novalidate>
+                        <div class="form-group input-wrapper">
+                            <label for="loginUser">Usuario</label>
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="loginUser" class="input" placeholder="ej. admin" required autocomplete="username">
+                        </div>
+                        <div class="form-group input-wrapper">
+                            <label for="loginPass">Contraseña</label>
+                            <span class="input-icon">🔑</span>
+                            <input type="password" id="pwInput" class="input" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" id="pwToggle" class="pw-toggle" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                        <button type="submit" id="loginBtn" class="btn btn-login">Ingresar</button>
+                    </form>
+
+                    <div class="creds">
+                        <h4>🔑 Credenciales de prueba (demo)</h4>
+                        <table>
+                            <tr><td style="font-weight:700;color:var(--text)">admin</td><td>Admin123!</td><td>Administrador</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">secretaria</td><td>Secretaria123!</td><td>Secretaría</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">docente</td><td>Docente123!</td><td>Docente</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">estudiante</td><td>Estudiante123!</td><td>Estudiante</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">padre</td><td>Padre123!</td><td>Padre/Tutor</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="back-home">
+                    <a href="index.html">← Volver al inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/mock-data.js"></script>
+    <script src="assets/js/pages.js"></script>
+</body>
+</html>
