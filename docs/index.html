@@ -3,69 +3,566 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>U.E. Paulo Freire — Plataforma Web v5</title>
+    <title>U.E. Paulo Freire — Inicio de sesión</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
     <style>
-        .hero { min-height: 70vh; display: grid; place-items: center; text-align: center; padding: 40px 20px; }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin: 0 0 16px; line-height: 1.1; }
-        .hero p { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--muted); max-width: 620px; margin: 0 auto 24px; line-height: 1.6; }
-        .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-        .features { padding: 60px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; margin: 30px auto; max-width: 900px; }
-        .features h2 { text-align: center; margin-bottom: 24px; }
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-        .feature-card { padding: 20px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.04); }
-        .feature-card h3 { margin: 0 0 8px; font-size: 1.1rem; }
-        .feature-card p { margin: 0; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
-        .note { text-align: center; margin-top: 30px; color: var(--muted); font-size: 0.95rem; }
-        .note code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; }
+        .login-bg { position: fixed; inset: 0; z-index: -1; background: url('assets/img/escudo.png') center/cover no-repeat; filter: blur(14px) brightness(0.45); transform: scale(1.15); }
+        .login-wrap { min-height: 100vh; display: grid; place-items: center; padding: 30px 16px; position: relative; overflow: hidden; }
+        .shell { display: grid; grid-template-columns: 1.05fr 1fr; width: min(1020px, 96vw); max-width: 900px; background: var(--surface); border-radius: 22px; overflow: hidden; position: relative; box-shadow: var(--shadow); backdrop-filter: blur(14px); border: 1px solid var(--line); }
+        .shell-left { position: relative; padding: 34px 30px; color: #eaf6fb; display: flex; flex-direction: column; gap: 14px; overflow: hidden; background: linear-gradient(160deg, var(--bg2), var(--primary-2) 60%, var(--primary)); background-size: 200% 200%; animation: bgShift 12s ease-in-out infinite alternate; }
+        .shell-left h1 { font-size: 1.6rem; margin: 0; line-height: 1.2; }
+        .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+        .brand-logo-login { width: 100px; height: 100px; object-fit: contain; }
+        .brand-badge { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; font-weight: 800; font-size: 1.2rem; color: #0b1220; background: linear-gradient(145deg, #e8eef4 0%, var(--primary) 45%, var(--primary-2) 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 18px rgba(0,0,0,.4); }
+        .illus { color: #bfe9f5; margin-top: 10px; font-size: 0.95rem; line-height: 1.5; max-width: 280px; }
+        .shell-right { padding: 34px 30px; display: flex; flex-direction: column; gap: 16px; }
+        .shell-sub { color: var(--muted); margin: 0; font-size: 0.95rem; }
+        .login-card { width: 100%; max-width: 380px; margin: 0 auto; }
+        .login-card h2 { margin: 0 0 10px; font-size: 1.5rem; }
+        .login-card p { color: var(--muted); margin: 0 0 22px; font-size: 0.95rem; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+        .input-wrapper { position: relative; }
+        .input { width: 100%; padding: 12px 14px 12px 42px; border-radius: 10px; border: 1px solid var(--line); background: rgba(255,255,255,.06); color: var(--text); font-family: inherit; font-size: 0.95rem; }
+        .input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(25,195,230,.2); }
+        .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; opacity: 0.7; }
+        .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 4px; }
+        .pw-toggle:hover { color: var(--text); }
+        .login-error { display: none; margin-bottom: 14px; padding: 10px 14px; background: rgba(255, 80, 80, .12); border: 1px solid rgba(255, 80, 80, .35); color: #ff6b6b; border-radius: 8px; font-size: 0.85rem; text-align: center; }
+        .btn-login { width: 100%; padding: 14px; border: none; border-radius: 10px; background: linear-gradient(120deg, var(--primary), var(--primary-2)); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; }
+        .btn-login:active { transform: scale(0.98); }
+        .btn-login.loading { position: relative; color: transparent; }
+        .btn-login.loading::after { content: ''; position: absolute; inset: 0; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 10px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .creds { margin-top: 22px; padding: 14px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px dashed var(--line); font-size: 0.82rem; color: var(--muted); }
+        .creds h4 { margin: 0 0 8px; font-size: 0.9rem; color: var(--text); }
+        .creds table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .creds td { padding: 4px 6px; border-bottom: 1px dashed rgba(255,255,255,.1); }
+
+        /* Dashboard (oculto por defecto) */
+        #dashboard-view { display: none; }
+        .layout { display: grid; grid-template-columns: auto 1fr; min-height: 100vh; }
+        .sidebar { width: 78px; overflow: hidden; transition: width .25s ease; position: sticky; top: 0; height: 100vh; padding: 16px 12px; background: linear-gradient(180deg, var(--bg2), var(--primary-2) 60%, var(--primary)); }
+        .sidebar:hover, .sidebar.expanded { width: 250px; }
+        .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; white-space: nowrap; }
+        .brand-text { font-weight: 700; }
+        .brand-logo { width: 56px; height: 56px; display: block; object-fit: contain; }
+        .label { opacity: 0; transition: opacity .2s; }
+        .sidebar:hover .label, .sidebar.expanded .label { opacity: 1; }
+        .menu { display: flex; flex-direction: column; gap: 8px; }
+        .menu-link { display: flex; align-items: center; gap: 12px; color: rgba(234,246,251,.92); text-decoration: none; padding: 12px; border-radius: 12px; white-space: nowrap; transition: .2s; }
+        .menu-link:hover, .menu-link.active { background: linear-gradient(120deg, rgba(255,255,255,.2), rgba(25,195,230,.28)); transform: translateX(4px); box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+        .ico { font-size: 1.15rem; min-width: 26px; text-align: center; }
+        .main { padding: 18px; min-width: 0; }
+        .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); backdrop-filter: blur(8px); }
+        .topbar h1 { margin: 0; font-size: 1.3rem; flex: 1; min-width: 0; }
+        .topbar-controls { display: flex; gap: 8px; }
+        .topbar-user { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+        .topbar-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
+        .content { min-height: 400px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 16px 0; }
+        .stat-card { padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.04); text-align: center; }
+        .stat-card h3 { margin: 0 0 8px; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+        .stat-card .count { font-size: 2rem; font-weight: 800; display: block; }
+        .btn-accent { background: linear-gradient(120deg, var(--turquoise), var(--primary)); border: none; color: #0b1220; font-weight: 700; padding: 10px 16px; border-radius: 10px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-accent:hover { filter: brightness(1.08); }
+        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); }
+        table.table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        table.table th { background: rgba(255,255,255,.04); text-align: left; padding: 10px 12px; color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+        table.table td { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+        table.table tr:last-child td { border-bottom: none; }
+        .section-block { margin-top: 16px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="theme-dark palette-metal">
-    <div class="hero">
-        <div>
-            <img src="assets/img/escudo.png" alt="Escudo U.E. Paulo Freire" style="width: 120px; height: 120px; margin-bottom: 16px; opacity: 0.9;">
-            <h1 class="metal-text">U.E. "Paulo Freire"</h1>
-            <p>Plataforma web de gestión escolar — Asistencia, calificaciones, horarios y comunicados con acceso por roles.</p>
-            <div class="hero-actions">
-                <a href="login.html" class="btn btn-accent">🔐 Iniciar Sesión (Demo)</a>
-                <a href="https://github.com/TU_USUARIO/ue_paulo_freire_web" class="btn" target="_blank" rel="noopener">📂 Ver Código en GitHub</a>
+    <div class="login-bg"></div>
+
+    <!-- ====== LOGIN (visible al entrar) ====== -->
+    <div id="login-view" class="login-wrap">
+        <div class="shell">
+            <div class="shell-left">
+                <div class="brand-row">
+                    <img src="assets/img/escudo.png" alt="Logo" class="brand-logo-login">
+                    <div class="brand-badge">PF</div>
+                </div>
+                <h1>U.E. Paulo Freire</h1>
+                <p class="illus">Sistema de gestión escolar — Acceso seguro para administradores, docentes, estudiantes y padres de familia.</p>
+            </div>
+            <div class="shell-right">
+                <p class="shell-sub">Inicia sesión con tus credenciales institucionales.</p>
+
+                <div class="login-card">
+                    <h2>🔐 Iniciar sesión</h2>
+                    <p>Accede al panel correspondiente según tu rol.</p>
+
+                    <div class="login-error" id="loginError">Usuario o contraseña incorrectos.</div>
+
+                    <form id="loginForm" novalidate>
+                        <div class="form-group input-wrapper">
+                            <label for="loginUser">Usuario</label>
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="loginUser" class="input" placeholder="ej. admin" required autocomplete="username">
+                        </div>
+                        <div class="form-group input-wrapper">
+                            <label for="loginPass">Contraseña</label>
+                            <span class="input-icon">🔑</span>
+                            <input type="password" id="pwInput" class="input" placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" id="pwToggle" class="pw-toggle" aria-label="Mostrar contraseña">👁</button>
+                        </div>
+                        <button type="submit" id="loginBtn" class="btn btn-login">Ingresar</button>
+                    </form>
+
+                    <div class="creds">
+                        <h4>🔑 Credenciales de prueba (demo)</h4>
+                        <table>
+                            <tr><td style="font-weight:700;color:var(--text)">admin</td><td>Admin123!</td><td>Administrador</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">secretaria</td><td>Secretaria123!</td><td>Secretaría</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">docente</td><td>Docente123!</td><td>Docente</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">estudiante</td><td>Estudiante123!</td><td>Estudiante</td></tr>
+                            <tr><td style="font-weight:700;color:var(--text)">padre</td><td>Padre123!</td><td>Padre/Tutor</td></tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <section class="features">
-        <h2>📋 Características</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <h3>🎭 5 Roles de Usuario</h3>
-                <p>Admin, secretaría, docente, estudiante y padre con permisos y paletas visuales distintas.</p>
-            </div>
-            <div class="feature-card">
-                <h3>✅ Asistencia Digital</h3>
-                <p>Registro de presencia, faltas, retrasos y licencias con notificaciones automáticas.</p>
-            </div>
-            <div class="feature-card">
-                <h3>📚 Calificaciones</h3>
-                <p>Notas por materia y trimestre con cálculo de promedio y libreta académica imprimible.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🕒 Horarios</h3>
-                <p>Vistas adaptativas de horario según el rol del usuario.</p>
-            </div>
-            <div class="feature-card">
-                <h3>📢 Comunicados</h3>
-                <p>Avisos segmentados global, por curso, docente o área.</p>
-            </div>
-            <div class="feature-card">
-                <h3>🔐 Seguridad</h3>
-                <p>Hash PBKDF2-SHA256, CSRF, rate-limiting y auditoría de accesos.</p>
+    <!-- ====== DASHBOARD (oculto hasta hacer login) ====== -->
+    <div id="dashboard-view">
+        <div class="layout">
+            <aside class="sidebar" id="sidebar">
+                <div class="brand">
+                    <img src="assets/img/escudo.png" alt="Logo U.E. Paulo Freire" class="brand-logo">
+                    <span class="brand-text metal-text label">U.E. Paulo Freire</span>
+                </div>
+                <nav class="menu">
+                    <a class="menu-link active" href="#" title="Panel"><span class="ico">🏠</span><span class="label">Panel</span></a>
+                    <a class="menu-link" href="#" title="Estudiantes"><span class="ico">🎓</span><span class="label">Estudiantes</span></a>
+                    <a class="menu-link" href="#" title="Asistencia"><span class="ico">✅</span><span class="label">Asistencia</span></a>
+                    <a class="menu-link" href="#" title="Calificaciones"><span class="ico">📚</span><span class="label">Calificaciones</span></a>
+                    <a class="menu-link" href="#" title="Horario"><span class="ico">🕒</span><span class="label">Horario</span></a>
+                    <a class="menu-link" href="#" title="Comunicados"><span class="ico">📢</span><span class="label">Comunicados</span></a>
+                    <a class="menu-link" href="#" title="Perfil"><span class="ico">👤</span><span class="label">Perfil</span></a>
+                    <a class="menu-link" href="#" title="Cerrar sesión" id="logoutBtn"><span class="ico">🚪</span><span class="label">Salir</span></a>
+                </nav>
+            </aside>
+
+            <div class="main">
+                <header class="topbar">
+                    <div class="topbar-controls">
+                        <button id="menuToggle" class="btn icon-btn" aria-label="Menu">☰</button>
+                        <button id="sideToggle" class="btn icon-btn" aria-label="Expandir">⇄</button>
+                    </div>
+                    <h1 class="metal-text" style="margin-right: 15px;">Panel de Control</h1>
+                    <div class="topbar-user" style="display: flex; gap: 8px; align-items: center;">
+                        <button id="themeToggle" class="btn icon-btn" title="Cambiar Tema">☀️</button>
+                        <img id="userAvatar" src="assets/img/avatars/avatar-estudiante.svg" alt="Avatar" class="topbar-avatar">
+                        <span class="badge badge-accent" id="userRole" style="font-size:0.75rem;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,.12);color:var(--text);">estudiante</span>
+                        <div style="display:flex;flex-direction:column;justify-content:center;">
+                            <div id="userName" style="font-weight:600;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Usuario</div>
+                            <div id="userEmail" style="font-size:0.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">correo@ejemplo.edu.bo</div>
+                        </div>
+                    </div>
+                </header>
+
+                <main class="content">
+                    <div id="dashboardContent"></div>
+                </main>
             </div>
         </div>
-    </section>
+    </div>
 
-    <p class="note">⚠️ Esta es una <strong>versión demo estática</strong> para GitHub Pages. El sistema completo con PHP y MySQL requiere un servidor como XAMPP. Consulta <code>README_INSTALACION.md</code> para la instalación local.</p>
+    <script src="assets/js/db.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            initDB();
+
+            function $(sel) { return document.querySelector(sel); }
+            function $$(sel) { return document.querySelectorAll(sel); }
+            function esc(text) {
+                var div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            var loginView = $('#loginView') || $('#login-view');
+            var dashboardView = $('#dashboardView') || $('#dashboard-view');
+            var loginForm = $('#loginForm');
+            var loginError = $('#loginError');
+            var loginBtn = $('#loginBtn');
+            var logoutBtn = $('#logoutBtn');
+            var dashboardContent = $('#dashboardContent');
+
+            var currentUser = getCurrentUser();
+
+            if (currentUser) {
+                showDashboard();
+            }
+
+            // ---------- Login ----------
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (ev) {
+                    ev.preventDefault();
+                    var user = $('#loginUser').value.trim();
+                    var pass = $('#loginPass').value;
+
+                    var u = login(user, pass);
+                    if (u) {
+                        loginError.style.display = 'none';
+                        loginBtn.classList.add('loading');
+                        setTimeout(function () {
+                            showDashboard();
+                        }, 600);
+                    } else {
+                        loginError.style.display = 'block';
+                        loginBtn.classList.remove('loading');
+                    }
+                });
+            }
+
+            var pwT = $('#pwToggle'), pwI = $('#pwInput');
+            if (pwT && pwI) {
+                pwT.addEventListener('click', function (ev) {
+                    ev.preventDefault();
+                    var show = pwI.type === 'password';
+                    pwI.type = show ? 'text' : 'password';
+                    pwT.textContent = show ? '🙈' : '👁';
+                    pwI.focus();
+                });
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function (ev) {
+                    ev.preventDefault();
+                    logout();
+                    dashboardView.style.display = 'none';
+                    loginView.style.display = 'grid';
+                    currentUser = null;
+                });
+            }
+
+            // ---------- Navegación ----------
+            function showDashboard() {
+                loginView.style.display = 'none';
+                dashboardView.style.display = 'block';
+                currentUser = getCurrentUser();
+
+                $('#userName').textContent = currentUser.full_name;
+                $('#userRole').textContent = currentUser.role;
+                $('#userEmail').textContent = currentUser.email;
+                $('#userAvatar').src = 'assets/img/avatars/' + esc(currentUser.avatar);
+                $('#userAvatar').onerror = function () { this.src = 'assets/img/avatars/avatar-estudiante.svg'; };
+
+                renderDashboard(currentUser.role);
+            }
+
+            // ---------- Render dashboard ----------
+            function renderDashboard(role) {
+                var db = getDB();
+                var html = '';
+
+                html += '<section class="card animate-in">\
+                    <div style="display:flex;align-items:center;gap:16px">\
+                        <img src="assets/img/avatars/' + esc(currentUser.avatar) + '" alt="Avatar" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--primary)" onerror="this.src=\'assets/img/avatars/avatar-estudiante.svg\'">\
+                        <div>\
+                            <h2 class="metal-text" style="margin:0">¡Hola, ' + esc(currentUser.full_name) + '</h2>\
+                            <p style="margin:4px 0 0;color:var(--muted)">' + esc(role) + ' · ' + esc(currentUser.email) + '</p>\
+                        </div>\
+                    </div>\
+                </section>';
+
+                if (role === 'admin' || role === 'secretaria') {
+                    var totalStudents = (db.students || []).length;
+                    var totalUsers = (db.users || []).length;
+                    var totalCourses = (db.courses || []).length;
+                    var totalAttendance = (db.attendance || []).length;
+
+                    html += '<section class="cards">\
+                        <article class="card stat-card reveal"><h3>Usuarios</h3><strong class="count" data-count="' + totalUsers + '">0</strong></article>\
+                        <article class="card stat-card reveal"><h3>Estudiantes</h3><strong class="count" data-count="' + totalStudents + '">0</strong></article>\
+                        <article class="card stat-card reveal"><h3>Cursos</h3><strong class="count" data-count="' + totalCourses + '">0</strong></article>\
+                        <article class="card stat-card reveal"><h3>Asistencias</h3><strong class="count" data-count="' + totalAttendance + '">0</strong></article>\
+                    </section>';
+
+                    html += '<section class="card animate-in" style="margin-top:16px;">\
+                        <h3>📊 Resumen Rápido</h3>\
+                        <p>Versión demo para GitHub Pages. Los datos se guardan en tu navegador (localStorage).</p>\
+                        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">\
+                            <button class="btn btn-accent" onclick="showSection(\'students\')">👥 Estudiantes</button>\
+                            <button class="btn btn-metal" onclick="showSection(\'attendance\')">✅ Asistencia</button>\
+                            <button class="btn" onclick="showSection(\'grades\')">📚 Calificaciones</button>\
+                            <button class="btn" onclick="showSection(\'schedules\')">🕒 Horarios</button>\
+                            <button class="btn" onclick="showSection(\'announcements\')">📢 Comunicados</button>\
+                        </div>\
+                        <div id="section-students" class="hidden section-block" style="margin-top:16px;">\
+                            <h4>👥 Estudiantes</h4>\
+                            <div class="table-responsive"><table class="table">\
+                                <tr><th>Nombre</th><th>RUDE</th><th>Curso</th><th>Estado</th></tr>' + renderStudentsTable(db) + '</table></div>\
+                        </div>\
+                        <div id="section-attendance" class="hidden section-block" style="margin-top:16px;">\
+                            <h4>✅ Registrar Asistencia</h4>\
+                            <form id="attendanceForm" style="display:flex; gap:8px; flex-wrap:wrap; align-items:end;">\
+                                <select id="attStudent" class="input" style="flex:1; min-width:200px;">' + renderStudentOptions(db) + '</select>\
+                                <select id="attStatus" class="input">\
+                                    <option value="P">Presente</option><option value="F">Falta</option><option value="R">Retraso</option><option value="L">Licencia</option><option value="RC">Retirado</option>\
+                                </select>\
+                                <input type="date" id="attDate" class="input" value="' + new Date().toISOString().split('T')[0] + '">\
+                                <button type="submit" class="btn btn-accent">Registrar</button>\
+                            </form>\
+                            <div id="attResult" style="margin-top:10px;"></div>\
+                            <h4 style="margin-top:20px;">Últimas asistencias</h4>\
+                            <div class="table-responsive"><table class="table">\
+                                <tr><th>Estudiante</th><th>Fecha</th><th>Estado</th></tr>' + renderAttendanceTable(db) + '</table></div>\
+                        </div>\
+                        <div id="section-grades" class="hidden section-block" style="margin-top:16px;">\
+                            <h4>📚 Calificaciones</h4>\
+                            <div class="table-responsive"><table class="table">\
+                                <tr><th>Estudiante</th><th>Materia</th><th>Trimestre</th><th>Nota</th></tr>' + renderGradesTable(db) + '</table></div>\
+                        </div>\
+                        <div id="section-schedules" class="hidden section-block" style="margin-top:16px;">\
+                            <h4>🕒 Horarios</h4>\
+                            <div class="table-responsive"><table class="table">\
+                                <tr><th>Día</th><th>Materia</th><th>Hora</th><th>Aula</th></tr>' + renderSchedulesTable(db) + '</table></div>\
+                        </div>\
+                        <div id="section-announcements" class="hidden section-block" style="margin-top:16px;">\
+                            <h4>📢 Comunicados</h4>\
+                            <div class="table-responsive"><table class="table">\
+                                <tr><th>Título</th><th>Contenido</th><th>Fecha</th></tr>' + renderAnnouncementsTable(db) + '</table></div>\
+                        </div>\
+                    </section>';
+                }
+
+                if (role === 'docente') {
+                    html += '<section class="card animate-in" style="margin-top:16px; border-left: 4px solid var(--primary);">\
+                        <h3>👨‍🏫 Panel del Docente</h3>\
+                        <p>Versión demo para GitHub Pages.</p>\
+                        <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">\
+                            <button class="btn btn-metal" onclick="showSection(\'attendanceDoc\')">✅ Tomar Asistencia</button>\
+                            <button class="btn btn-accent" onclick="showSection(\'gradesDoc\')">📚 Calificaciones</button>\
+                            <button class="btn" onclick="showSection(\'schedulesDoc\')">🕒 Mi Horario</button>\
+                        </div>\
+                    </section>';
+
+                    html += '<div id="section-attendanceDoc" class="hidden section-block" style="margin-top:16px;">\
+                        <h4>✅ Registrar Asistencia</h4>\
+                        <form id="attendanceFormDoc" style="display:flex; gap:8px; flex-wrap:wrap; align-items:end;">\
+                            <select id="attStudentDoc" class="input" style="flex:1; min-width:200px;">' + renderStudentOptions(db) + '</select>\
+                            <select id="attStatusDoc" class="input">\
+                                <option value="P">Presente</option><option value="F">Falta</option><option value="R">Retraso</option><option value="L">Licencia</option><option value="RC">Retirado</option>\
+                            </select>\
+                            <input type="date" id="attDateDoc" class="input" value="' + new Date().toISOString().split('T')[0] + '">\
+                            <button type="submit" class="btn btn-accent">Registrar</button>\
+                        </form>\
+                        <div id="attResultDoc" style="margin-top:10px;"></div>\
+                    </div>\
+                    <div id="section-gradesDoc" class="hidden section-block" style="margin-top:16px;">\
+                        <h4>📚 Calificaciones</h4>\
+                        <div class="table-responsive"><table class="table">\
+                            <tr><th>Estudiante</th><th>Materia</th><th>Trimestre</th><th>Nota</th></tr>' + renderGradesTable(db) + '</table></div>\
+                    </div>\
+                    <div id="section-schedulesDoc" class="hidden section-block" style="margin-top:16px;">\
+                        <h4>🕒 Mi Horario</h4>\
+                        <div class="table-responsive"><table class="table">\
+                            <tr><th>Día</th><th>Materia</th><th>Hora</th><th>Aula</th></tr>' + renderSchedulesTable(db, true) + '</table></div>\
+                    </div>';
+                }
+
+                if (role === 'padre') {
+                    var children = (db.students || []).filter(s => s.guardian_email === currentUser.email || s.user_id === currentUser.id);
+                    if (children.length === 0) children = (db.students || []).slice(0, 2);
+                    html += '<section class="card animate-in" style="margin-top:16px; border-left: 4px solid var(--primary);">\
+                        <h3>👨‍👩‍👦 Panel de Familia</h3>\
+                        <p>Monitorea el progreso académico y asistencia de tus hijos.</p>\
+                    </section>';
+                    children.forEach(function (ch) {
+                        var chAtt = (db.attendance || []).filter(a => a.student_id == ch.id).sort(function (x, y) { return new Date(y.date) - new Date(x.date); }).slice(0, 5);
+                        html += '<section class="card animate-in" style="margin-top:16px;">\
+                            <h3>👤 ' + esc(ch.first_name + ' ' + ch.last_name) + '</h3>\
+                            <p><strong>RUDE:</strong> ' + esc(ch.rude) + ' | <strong>Curso:</strong> ' + getCourseName(db, ch.course_id) + '</p>';
+                        if (chAtt.length) {
+                            html += '<h4 style="margin-top:15px;">Última Asistencia</h4><div class="table-responsive"><table class="table"><tr><th>Fecha</th><th>Estado</th></tr>';
+                            chAtt.forEach(function (a) { html += '<tr><td>' + esc(a.date) + '</td><td>' + esc(a.status) + '</td></tr>'; });
+                            html += '</table></div>';
+                        }
+                        html += '</section>';
+                    });
+                }
+
+                if (role === 'estudiante') {
+                    var student = (db.students || []).find(s => s.user_id === currentUser.id) || (db.students || [])[0];
+                    var studentGrades = (db.grades || []).filter(g => g.student_id == student.id);
+                    var studentSched = (db.schedules || []).filter(s => s.course_id == student.course_id);
+
+                    html += '<section class="card animate-in" style="margin-top:16px; border-left: 4px solid var(--primary);">\
+                        <h3>🎓 Mi Panel Estudiantil</h3>\
+                        <p>Revisa tus calificaciones, horario y asistencia (demo estática).</p>\
+                    </section>';
+
+                    if (studentGrades.length) {
+                        html += '<section class="card animate-in" style="margin-top:16px;">\
+                            <h3>📚 Mis Calificaciones</h3>\
+                            <div class="table-responsive"><table class="table"><tr><th>Materia</th><th>Trimestre</th><th>Nota</th></tr>';
+                        studentGrades.forEach(function (g) {
+                            html += '<tr><td>' + esc(getSubjectName(db, g.subject_id)) + '</td><td>' + esc(getTermName(db, g.term_id)) + '</td><td><strong>' + esc(g.score) + '</strong></td></tr>';
+                        });
+                        html += '</table></div></section>';
+                    }
+
+                    if (studentSched.length) {
+                        html += '<section class="card animate-in" style="margin-top:16px;">\
+                            <h3>🕒 Mi Horario</h3>\
+                            <div class="table-responsive"><table class="table"><tr><th>Día</th><th>Materia</th><th>Hora</th></tr>';
+                        studentSched.forEach(function (s) {
+                            html += '<tr><td>' + esc(s.day_of_week) + '</td><td>' + esc(getSubjectName(db, s.subject_id)) + '</td><td>' + esc(s.start_time + ' - ' + s.end_time) + '</td></tr>';
+                        });
+                        html += '</table></div></section>';
+                    }
+                }
+
+                dashboardContent.innerHTML = html;
+
+                document.querySelectorAll('.count').forEach(function (el) {
+                    var target = parseInt(el.getAttribute('data-count') || el.textContent || '0', 10);
+                    el.textContent = target;
+                });
+
+                setupAttendanceForm('attendanceForm', 'attResult');
+                setupAttendanceForm('attendanceFormDoc', 'attResultDoc');
+            }
+
+            window.showSection = function (id) {
+                $$('.section-block').forEach(function (el) { el.classList.add('hidden'); });
+                var el = $('#section-' + id);
+                if (el) el.classList.remove('hidden');
+            };
+
+            // ---------- Helpers ----------
+            function renderStudentsTable(db) {
+                var rows = '';
+                (db.students || []).forEach(function (s) {
+                    rows += '<tr><td>' + esc(s.first_name + ' ' + s.last_name) + '</td><td>' + esc(s.rude) + '</td><td>' + getCourseName(db, s.course_id) + '</td><td>' + (s.status ? 'Activo' : 'Inactivo') + '</td></tr>';
+                });
+                return rows || '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No hay estudiantes</td></tr>';
+            }
+
+            function renderStudentOptions(db) {
+                var opts = '';
+                (db.students || []).forEach(function (s) {
+                    opts += '<option value="' + s.id + '">' + esc(s.first_name + ' ' + s.last_name) + ' (' + esc(s.rude) + ')</option>';
+                });
+                return opts;
+            }
+
+            function renderAttendanceTable(db) {
+                var rows = '';
+                (db.attendance || []).slice(0, 10).reverse().forEach(function (a) {
+                    var s = (db.students || []).find(st => st.id == a.student_id);
+                    rows += '<tr><td>' + (s ? esc(s.first_name + ' ' + s.last_name) : 'Desconocido') + '</td><td>' + esc(a.date) + '</td><td>' + esc(a.status) + '</td></tr>';
+                });
+                return rows || '<tr><td colspan="3" style="text-align:center;color:var(--muted);">Sin registros</td></tr>';
+            }
+
+            function renderGradesTable(db) {
+                var rows = '';
+                (db.grades || []).slice(0, 10).forEach(function (g) {
+                    var s = (db.students || []).find(st => st.id == g.student_id);
+                    rows += '<tr><td>' + (s ? esc(s.first_name + ' ' + s.last_name) : 'Desconocido') + '</td><td>' + esc(getSubjectName(db, g.subject_id)) + '</td><td>' + esc(getTermName(db, g.term_id)) + '</td><td><strong>' + esc(g.score) + '</strong></td></tr>';
+                });
+                return rows || '<tr><td colspan="4" style="text-align:center;color:var(--muted);">Sin calificaciones</td></tr>';
+            }
+
+            function renderSchedulesTable(db, teacherOnly) {
+                var rows = '';
+                (db.schedules || []).forEach(function (s) {
+                    if (teacherOnly && s.teacher_user_id != currentUser.id) return;
+                    rows += '<tr><td>' + esc(s.day_of_week) + '</td><td>' + esc(getSubjectName(db, s.subject_id)) + '</td><td>' + esc(s.start_time + ' - ' + s.end_time) + '</td><td>' + esc(s.classroom) + '</td></tr>';
+                });
+                return rows || '<tr><td colspan="4" style="text-align:center;color:var(--muted);">Sin horarios</td></tr>';
+            }
+
+            function renderAnnouncementsTable(db) {
+                var rows = '';
+                (db.announcements || []).slice(0, 10).reverse().forEach(function (a) {
+                    rows += '<tr><td>' + esc(a.title) + '</td><td>' + esc(a.content) + '</td><td>' + esc(a.created_at) + '</td></tr>';
+                });
+                return rows;
+            }
+
+            function getCourseName(db, id) {
+                var c = (db.courses || []).find(x => x.id == id);
+                return c ? esc(c.name + ' ' + c.parallel) : 'N/A';
+            }
+            function getSubjectName(db, id) {
+                var s = (db.subjects || []).find(x => x.id == id);
+                return s ? esc(s.name) : 'N/A';
+            }
+            function getTermName(db, id) {
+                var t = (db.terms || []).find(x => x.id == id);
+                return t ? esc(t.name) : 'N/A';
+            }
+
+            function setupAttendanceForm(formId, resultId) {
+                var form = $(formId);
+                var result = $(resultId);
+                if (!form) return;
+                form.addEventListener('submit', function (ev) {
+                    ev.preventDefault();
+                    var sel = formId === 'attendanceForm' ? '#attStudent' : '#attStudentDoc';
+                    var selStatus = formId === 'attendanceForm' ? '#attStatus' : '#attStatusDoc';
+                    var selDate = formId === 'attendanceForm' ? '#attDate' : '#attDateDoc';
+                    var studentId = parseInt($(sel).value, 10);
+                    var status = $(selStatus).value;
+                    var date = $(selDate).value;
+                    if (!studentId || !status || !date) return;
+
+                    var db = getDB();
+                    var existing = (db.attendance || []).find(a => a.student_id == studentId && a.date == date);
+                    if (existing) {
+                        updateInCollection('attendance', existing.id, { status: status, registered_by: currentUser.id });
+                    } else {
+                        addToCollection('attendance', {
+                            student_id: studentId, date: date, status: status,
+                            registered_by: currentUser.id, created_at: new Date().toISOString()
+                        });
+                    }
+                    result.textContent = '✅ Asistencia registrada correctamente.';
+                    result.style.color = 'var(--primary)';
+                    setTimeout(function () { result.textContent = ''; }, 3000);
+                    renderDashboard(currentUser.role);
+                });
+            }
+
+            // ---------- Sidebar / tema ----------
+            var sidebar = $('#sidebar');
+            var menuToggle = $('#menuToggle');
+            var sideToggle = $('#sideToggle');
+            if (menuToggle && sidebar) menuToggle.addEventListener('click', function () { sidebar.classList.toggle('open'); });
+            if (sideToggle && sidebar) sideToggle.addEventListener('click', function () { sidebar.classList.toggle('expanded'); });
+
+            var themeToggle = $('#themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function () {
+                    document.body.classList.toggle('theme-light');
+                    document.body.classList.toggle('theme-dark');
+                });
+            }
+
+            function setDevice() {
+                var w = window.innerWidth;
+                document.body.classList.remove('device-mobile', 'device-tablet', 'device-desktop');
+                document.body.classList.add(w < 700 ? 'device-mobile' : (w < 1000 ? 'device-tablet' : 'device-desktop'));
+            }
+            setDevice();
+            window.addEventListener('resize', setDevice);
+        })();
+    </script>
 </body>
 </html>
